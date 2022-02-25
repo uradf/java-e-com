@@ -6,3 +6,13 @@ CREATE TABLE Product (
   price int(11),
   amount int(11)
 );
+
+DROP TABLE IF EXISTS Customer;
+CREATE TABLE Customer (
+    id INT AUTO_INCREMENT  PRIMARY KEY,
+    userid VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
+    province VARCHAR(50) NOT NULL
+);

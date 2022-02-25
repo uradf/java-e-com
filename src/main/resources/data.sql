@@ -13,3 +13,5 @@ INSERT INTO product (id, name, description, price, amount) VALUES (12, 'Very goo
 INSERT INTO product (id, name, description, price, amount) VALUES (13, 'Very good item 13', 'Good', 100, 10);
 INSERT INTO product (id, name, description, price, amount) VALUES (14, 'Tank', 'No tax very good', 1000000, 10);
 INSERT INTO product (id, name, description, price, amount) VALUES (15, 'Submarine', 'No tax very Good', 2000000, 10);
+
+INSERT INTO Customer (id, userid, password, name, surname, province ) VALUES (1, 'prayut', '8b8e9715d12e4ca12c4c3eb4865aaf6a', 'prayut', 'chanocha', 'Krupthep');
