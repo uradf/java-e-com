@@ -16,3 +16,13 @@ CREATE TABLE Customer (
     surname VARCHAR(50) NOT NULL,
     province VARCHAR(50) NOT NULL
 );
+
+DROP TABLE If EXISTS basket_product;
+CREATE TABLE basket_product (
+  id int(11) AUTO_INCREMENT PRIMARY KEY,
+  product int(11) NOT NULL,
+  customer int(11) NOT NULL
+);
+
+ALTER TABLE basket_product ADD FOREIGN KEY (product) REFERENCES Product(id);
+ALTER TABLE basket_product ADD FOREIGN KEY (customer) REFERENCES Customer(id);
