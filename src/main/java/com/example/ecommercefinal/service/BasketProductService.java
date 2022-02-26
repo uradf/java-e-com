@@ -4,7 +4,6 @@ import com.example.ecommercefinal.config.JwtTokenUtil;
 import com.example.ecommercefinal.entity.BasketProduct;
 import com.example.ecommercefinal.entity.CustomerBasket;
 import com.example.ecommercefinal.entity.ProductBasket;
-import com.example.ecommercefinal.exception.CustomerNotFoundException;
 import com.example.ecommercefinal.exception.NoDataInBasketException;
 import com.example.ecommercefinal.repository.BasketProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,16 @@ public class BasketProductService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
+    public void setBasketProductRepository(BasketProductRepository basketProductRepository) {
+        this.basketProductRepository = basketProductRepository;
+    }
+
     public boolean add(int product, int customer, String token) {
-        if (!jwtTokenUtil.validate(token)) throw new CustomerNotFoundException();
+        if (!jwtTokenUtil.validate(token)) return false;
         if (product == 0 || customer == 0) throw new NoDataInBasketException();
 
         BasketProduct basketProduct = new BasketProduct();
