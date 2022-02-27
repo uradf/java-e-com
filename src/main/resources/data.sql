@@ -15,3 +15,11 @@ INSERT INTO product (id, name, description, price, amount) VALUES (14, 'Tank', '
 INSERT INTO product (id, name, description, price, amount) VALUES (15, 'Submarine', 'No tax very Good', 2000000, 10);
 
 INSERT INTO Customer (id, userid, password, name, surname, province ) VALUES (1, 'prayut', '8b8e9715d12e4ca12c4c3eb4865aaf6a', 'prayut', 'chanocha', 'Krupthep');
+
+--INSERT INTO basket_product (id, product, customer) VALUES (1, 15, 1);
+--INSERT INTO basket_product (id, product, customer) VALUES (2, 15, 1);
+--INSERT INTO basket_product (id, product, customer) VALUES (3, 15, 1);
+
+--INSERT INTO transaction_head (id, customer, createat) VALUES (1, 1, '2022-02-26T22:25:45.217292400');
+--INSERT INTO transaction_detail (id, product, name, price, amount, head) VALUES (1, 14, 'Tank', 1000000, 1, 1);
+--INSERT INTO transaction_detail (id, product, name, price, amount, head) VALUES (2, 15, 'Submarine', 2000000, 1, 1);
