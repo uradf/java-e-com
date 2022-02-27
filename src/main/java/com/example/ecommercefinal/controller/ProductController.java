@@ -1,6 +1,7 @@
 package com.example.ecommercefinal.controller;
 
 import com.example.ecommercefinal.response.ProductResponse;
+import com.example.ecommercefinal.response.SingleProductResponse;
 import com.example.ecommercefinal.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,11 @@ public class ProductController {
     final int SIZE = 5;
     @Autowired
     ProductService productService;
+
+    @GetMapping("/product")
+    public SingleProductResponse getProductById(@RequestParam(defaultValue = "0") int id) {
+        return new SingleProductResponse("products/{page}", productService.getById(id));
+    }
 
     @GetMapping("/products")
     public ProductResponse getProductsByPage(@RequestParam(defaultValue = "0") int page) {
