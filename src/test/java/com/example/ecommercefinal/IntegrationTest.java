@@ -2,11 +2,14 @@ package com.example.ecommercefinal;
 
 import com.example.ecommercefinal.config.JwtTokenUtil;
 import com.example.ecommercefinal.entity.Customer;
+import com.example.ecommercefinal.entity.PickedProduct;
 import com.example.ecommercefinal.entity.Product;
-import com.example.ecommercefinal.repository.BasketProductRepository;
-import com.example.ecommercefinal.repository.CustomerRepository;
-import com.example.ecommercefinal.repository.ProductRepository;
+import com.example.ecommercefinal.entity.TransactionHead;
+import com.example.ecommercefinal.repository.*;
 import com.example.ecommercefinal.service.BasketProductService;
+import com.example.ecommercefinal.service.ProductService;
+import com.example.ecommercefinal.service.TransactionService;
+import com.example.ecommercefinal.service.WalletGateWay;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +37,22 @@ public class IntegrationTest {
     @Autowired
     BasketProductRepository basketProductRepository;
 
+    @Autowired
+    PickedProductRepository pickedProductRepository;
+
+    @Autowired
+    TransactionHeadRepository transactionHeadRepository;
+
+    @Autowired
+    TransactionDetailRepository transactionDetailRepository;
+
     BasketProductService basketProductService;
+
+    TransactionService transactionService;
+
+    WalletGateWay walletGateWay;
+
+    ProductService productService;
 
     @Test
     @DisplayName("User กดเรียกดูสินค้า โดยระบบจะแสดงสินค้าหน้าละ 5 ชิ้น")
@@ -171,4 +190,70 @@ public class IntegrationTest {
         // Assert
         assertEquals(RESULT, result);
     }
+
+    @Test
+    @DisplayName("User กดสั่งซื้อสินค้า และ System แสดงรายละเอียดสินค้าในตะกร้า (ชื่อ ราคา)")
+    public void test08() {
+        // Arrange
+        String token = getToken();
+        int customer = 1;
+        int product = 15;
+        String RESULT_NAME = "Submarine";
+        int RESULT_PRICE = 2000000;
+        boolean RESULT_ADD = true;
+
+        basketProductService = new BasketProductService();
+        JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+        basketProductService.setJwtTokenUtil(jwtTokenUtil);
+        basketProductService.setBasketProductRepository(basketProductRepository);
+        basketProductService.setPickedProductRepository(pickedProductRepository);
+
+        // Act
+        boolean result = basketProductService.add(product, customer, token);
+        List<PickedProduct> pickedProducts = basketProductService.get(token);
+
+        // Assert
+        assertEquals(RESULT_ADD, result);
+        pickedProducts.forEach(pickedProduct -> {
+            assertEquals(RESULT_NAME, pickedProduct.getName());
+            assertEquals(RESULT_PRICE, pickedProduct.getPrice());
+        });
+    }
+
+    @Test
+    @DisplayName("User เลือกจ่ายด้วย External Wallet address และ ยืนยันการสั่งซื้อ (System ทำการตัดเงินและ Stock) และระบบจะแสดงใบเสร็จ")
+    public void test09() {
+        // Arrange
+        int FINAL_AMOUNT = 7;
+        int product = 15;
+        int customer = 1;
+        String token = getToken();
+        transactionService = new TransactionService();
+        basketProductService = new BasketProductService();
+        walletGateWay = new WalletGateWay();
+        productService = new ProductService();
+        basketProductService.setPickedProductRepository(pickedProductRepository);
+        basketProductService.setBasketProductRepository(basketProductRepository);
+        basketProductService.setJwtTokenUtil(new JwtTokenUtil());
+        productService.setProductRepository(productRepository);
+
+        transactionService.setBasketProductService(basketProductService);
+        transactionService.setWalletGateWay(walletGateWay);
+        transactionService.setProductService(productService);
+        transactionService.setJwtTokenUtil(new JwtTokenUtil());
+        transactionService.setTransactionHeadRepository(transactionHeadRepository);
+        transactionService.setTransactionDetailRepository(transactionDetailRepository);
+
+        // Act
+        basketProductService.add(product, customer, token);
+        basketProductService.add(product, customer, token);
+        basketProductService.add(product, customer, token);
+        List<TransactionHead> transactionHeadList = transactionService.createTransaction(token);
+        Product _product = productService.getById(product);
+
+        // Assert
+        assertEquals(transactionHeadList.get(0).getId(), 1);
+        assertEquals(FINAL_AMOUNT, _product.getAmount());
+    }
+
 }

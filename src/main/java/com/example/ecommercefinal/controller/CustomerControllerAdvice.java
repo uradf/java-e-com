@@ -1,8 +1,10 @@
 package com.example.ecommercefinal.controller;
 
 import com.example.ecommercefinal.exception.AuthenFailedException;
+import com.example.ecommercefinal.exception.CustomerBalanceRunOutException;
 import com.example.ecommercefinal.exception.CustomerNotFoundException;
 import com.example.ecommercefinal.response.AuthenFailedResponse;
+import com.example.ecommercefinal.response.CustomerBalanceRunOutResponse;
 import com.example.ecommercefinal.response.CustomerResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,4 +28,13 @@ public class CustomerControllerAdvice {
     public AuthenFailedResponse userWrongInput(AuthenFailedException e) {
         return new AuthenFailedResponse(HttpStatus.NOT_FOUND + "");
     }
+
+    @ExceptionHandler(CustomerBalanceRunOutException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public CustomerBalanceRunOutResponse userWrongInput(CustomerBalanceRunOutException e) {
+        return new CustomerBalanceRunOutResponse(e.getMessage());
+    }
+
+
 }

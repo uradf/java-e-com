@@ -33,6 +33,10 @@ public class BasketProductService {
         this.basketProductRepository = basketProductRepository;
     }
 
+    public void setPickedProductRepository(PickedProductRepository pickedProductRepository) {
+        this.pickedProductRepository = pickedProductRepository;
+    }
+
     public List<PickedProduct> get(String token) {
         if (!jwtTokenUtil.validate(token)) return new ArrayList<PickedProduct>();
         int customer = jwtTokenUtil.getUserId(token);
