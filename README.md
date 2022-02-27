@@ -28,32 +28,149 @@ Version 1.0.0
 
 # API List
 
-> Product &nbsp;&nbsp;&nbsp;&nbsp; GET &nbsp;&nbsp;&nbsp;&nbsp; /product?id=1 &nbsp;&nbsp;&nbsp;&nbsp; ดึง Product ทีละ 5 ชิ้น
+Endpoint  | METHOD       | Path | Description | Sample Valid Request Body | Sample Valid Response Body |
+------------- |--------------|------|-------------|-----------------------|---------------------------|
+Product  | GET | /product  | ดึง Product 1 ชิ้น| [QueryParams](#product-req) | [JSON](#product-res)
+Product  | GET | /products  | ดึง Product ทีละ 5 ชิ้น| [QueryParams](#product-page-req) | [JSON](#product-page-res)
+Product  | GET | /products/by  | ดึง Product ทีละ 5 ชิ้น ตามชื่อ Product| [QueryParams](#product-page-by-name-req) | [JSON](#product-page-by-name-res)
+Customer  | POST | /auth  | สำหรับดึง JWTToken| [JSON](#auth-req) | [JSON](#auth-res)
+Customer  | GET | /address  | สำหรับดึง User Address | [QueryParams](#address-req) | [JSON](#address-res)
+BasketProduct  | GET | /basket  | สำหรับดึงข้อมูลตะกร้าสินค้า| [QueryParams](#basket-req) | [JSON](#basket-res)
+BasketProduct  | POST | /addProduct  | เพิ่มสินค้าลงตะกร้า | [JSON](#addProduct-req) | [JSON](#addProduct-res)
+Transaction  | GET | /purchase  | สำหรับดึงข้อมูล Transaction ที่สำเร็จแล้ว | [QueryParams](#purchase-get-req) | [JSON](#purchase-get-res)
+Transaction  | POST | /purchase  | ยืนยันการสั่งซื้อสินค้าที่อยู่ในตะกร้า (BasketProduct      ) | [JSON](#purchase-tx-req) | [JSON](#purchase-tx-res)
 
-> Product &nbsp;&nbsp;&nbsp;&nbsp; GET &nbsp;&nbsp;&nbsp;&nbsp; /products?page=0 &nbsp;&nbsp;&nbsp;&nbsp; ดึง Product ทีละ 5 ชิ้น
 
-> Product &nbsp;&nbsp;&nbsp;&nbsp; GET &nbsp;&nbsp;&nbsp;&nbsp; /products/by?name= &nbsp;&nbsp;&nbsp;&nbsp; ดึง Product ทีละ 5 ชิ้น ตามชื่อ Product
+# Request Body
 
-> Customer &nbsp;&nbsp;&nbsp;&nbsp; POST &nbsp;&nbsp;&nbsp;&nbsp; /auth &nbsp;&nbsp;&nbsp;&nbsp; สำหรับดึง JWTToken
-> > {<br>
-> > &nbsp;&nbsp;&nbsp;&nbsp;"username": "prayut",<br>
-> > &nbsp;&nbsp;&nbsp;&nbsp;"password": "P@ssw0rd1"<br>
-> > }
+### product-req 
+[GET] api/v1/product
+> ?id={INTEGER}
 
-> Customer &nbsp;&nbsp;&nbsp;&nbsp; GET &nbsp;&nbsp;&nbsp;&nbsp; /address?token=JWT &nbsp;&nbsp;&nbsp;&nbsp; สำหรับดึง User Address
+<br>
 
-> BasketProduct &nbsp;&nbsp;&nbsp;&nbsp; GET &nbsp;&nbsp;&nbsp;&nbsp; /basket?token=JWT &nbsp;&nbsp;&nbsp;&nbsp; สำหรับดึงข้อมูลตะกร้าสินค้า
+### product-page-req 
+[GET] api/v1/product
+> ?page={INTEGER}
 
-> BasketProduct &nbsp;&nbsp;&nbsp;&nbsp; POST &nbsp;&nbsp;&nbsp;&nbsp; /addProduct &nbsp;&nbsp;&nbsp;&nbsp; เพิ่มสินค้าลงตะกร้า
-> > {<br>
-> > &nbsp;&nbsp;&nbsp;&nbsp;"product": 15,<br>
-> > &nbsp;&nbsp;&nbsp;&nbsp;"customer": 1,<br>
->  > &nbsp;&nbsp;&nbsp;&nbsp;"token": "JWT_STRING"<br>
-> > }
+<br>
 
-> Transaction &nbsp;&nbsp;&nbsp;&nbsp; GET &nbsp;&nbsp;&nbsp;&nbsp; /purchase?token=JWT &nbsp;&nbsp;&nbsp;&nbsp; สำหรับดึงข้อมูล Transaction ที่สำเร็จแล้ว
+### product-page-by-name-req 
+[GET] api/v1/product
+> ?page={INTEGER}
+> &name={PRODUCT_NAME}
 
-> Transaction &nbsp;&nbsp;&nbsp;&nbsp; POST &nbsp;&nbsp;&nbsp;&nbsp; /purchase &nbsp;&nbsp;&nbsp;&nbsp; ยืนยันการสั่งซื้อสินค้าที่อยู่ในตะกร้า (BasketProduct      )
-> > {<br>
->  > &nbsp;&nbsp;&nbsp;&nbsp;"token": "JWT_STRING"<br>
-> > }
+<br>
+
+### auth-req
+[POST] api/v1/auth
+
+>  {<br>
+>  &nbsp;&nbsp;&nbsp;&nbsp;"username": "prayut",<br>
+>  &nbsp;&nbsp;&nbsp;&nbsp;"password": "P@ssw0rd1"<br>
+>  }
+
+<br>
+
+### address-req
+[GET] api/v1/address
+> ?token={JWT_TOKEN}
+
+<br>
+
+### basket-req
+[GET] api/v1/basket
+> ?token={JWT_TOKEN}
+
+<br>
+
+### addProduct-req
+[POST] api/v1/addProduct
+
+>  {<br>
+>  &nbsp;&nbsp;&nbsp;&nbsp;"product": {PRODUCT_ID},<br>
+>  &nbsp;&nbsp;&nbsp;&nbsp;"customer": {CUSTOMER_ID}<br>
+>  &nbsp;&nbsp;&nbsp;&nbsp;"token": {JWT_TOKEN}<br>
+>  }
+
+<br>
+
+### purchase-get-req
+[GET] api/v1/purchase
+> ?token={JWT_TOKEN}
+
+<br>
+
+### purchase-tx-req
+[POST] api/v1/purchase
+
+>  {<br>
+>  &nbsp;&nbsp;&nbsp;&nbsp;"token": {JWT_TOKEN}<br>
+>  }
+
+
+<br>
+
+# Response Body
+
+### product-res 
+[GET] api/v1/product
+
+![Alt text](wiki/img/product-res.png)
+
+<br>
+
+### product-page-res 
+[GET] api/v1/products
+
+![Alt text](wiki/img/product-page-res.png)
+
+<br>
+
+### product-page-by-name-res 
+[GET] api/v1/products/by
+
+![Alt text](wiki/img/product-page-by-name-res.png)
+
+<br>
+
+### auth-res
+[POST] api/v1/auth
+
+![Alt text](wiki/img/auth-res.png)
+
+<br>
+
+### address-res
+[GET] api/v1/address
+
+![Alt text](wiki/img/address-res.png)
+
+<br>
+
+### basket-res
+[GET] api/v1/basket
+
+![Alt text](wiki/img/basket-res.png)
+
+<br>
+
+### addProduct-res
+[POST] api/v1/addProduct
+
+![Alt text](wiki/img/addProduct-res.png)
+
+<br>
+
+### purchase-get-res
+[GET] api/v1/purchase
+
+![Alt text](wiki/img/purchase-get-res.png)
+
+<br>
+
+### purchase-tx-res
+[POST] api/v1/purchase
+
+![Alt text](wiki/img/purchase-tx-res.png)
+
